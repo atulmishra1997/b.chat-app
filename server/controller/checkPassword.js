@@ -29,7 +29,7 @@ async function checkPassword(req, res) {
             secure : true
         }
 
-        return res.cookie('token', token.cookieOptions).status(200).json({
+        return res.cookie('token', token, cookieOptions).status(200).json({
             message : "Login successful",
             token : token,
             success : true,
