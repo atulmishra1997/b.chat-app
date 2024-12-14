@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { IoClose } from "react-icons/io5";
 import { Link } from 'react-router-dom';
 import uploadFile from '../helpers/uploadFiles';
+import axios from 'axios';
 
 const RegisterPage = () => {
 
@@ -29,8 +30,15 @@ const RegisterPage = () => {
     const handleUploadPhoto = async(e) => {
         const file = e.target.files[0];
         const uploadPhoto = await uploadFile(file)
-        console.log("uploadPhoto",uploadPhoto)
-        setUploadPhoto(file)
+        // console.log("uploadPhoto",uploadPhoto)
+        setUploadPhoto(file);
+
+        setData((preVal)=> {
+            return{
+                ...preVal,
+                profile_pic: uploadPhoto?.url
+            }
+        })
     }
 
     const handleClearImage = (e) => {
@@ -39,15 +47,25 @@ const RegisterPage = () => {
         setUploadPhoto(null)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        const URL = `https://localhost:1996/api/register`;
+
+        try {
+            const response = await axios.post(URL, data);
+            console.log('response', response)
+        } catch (error) {
+            console.log('error', error)
+        }
+        
         console.log("data",data)
     }
 
     return (
         <div className='mt-28'>
-            <div className='w-full max-w-md md:mx-auto mx-2 overflow-hidden bg-slate-300 p-4 rounded'>
+            <div className='w-full max-w-md mx-auto overflow-hidden bg-slate-300 p-4 rounded'>
                 <h3>Welcome to <span className='text-[#646497] font-bold'>B.Chat!</span></h3>
 
                 <form className='grid gap-4 mt-5' onSubmit={handleSubmit}>
